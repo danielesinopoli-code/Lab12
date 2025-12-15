@@ -79,4 +79,30 @@ class Model:
         return minori, maggiori
 
     """Implementare la parte di ricerca del cammino minimo"""
-    # TODO
+    def get_shortest_path(self, soglia):
+        path_migliores = []
+        min_total_weight = float('inf')
+        for n in self.G.nodes():
+            vicini_validi =[]
+            for vicino in self.G.neighbors(n):
+                peso=self.G[n][vicino]['weight']
+                if peso > soglia:
+                    vicini_validi.append((vicino, peso))
+            if len(vicini_validi) >=2 : #valido che gli archi siano almeno 2
+                vicini_validi.sort(key=lambda x: x[1])
+                v1, p1= vicini_validi[0]
+                v2, p2= vicini_validi[1]
+
+
+
+                peso_attuale= p1 + p2
+
+                if peso_attuale < min_total_weight:
+                    min_total_weight = peso_attuale
+                    if v1<v2:   #correggo l'ordine degli archi
+                        path_migliores= [(v1,n, p1),(n,v2, p2)]
+                    else:
+                        path_migliores= [(v2,n, p2),(n,v1, p1)]
+
+        return path_migliores, min_total_weight
+

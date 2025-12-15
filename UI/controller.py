@@ -47,5 +47,30 @@ class Controller:
         self._view.page.update()
 
     """Implementare la parte di ricerca del cammino minimo"""
-    # TODO
+    def handle_path(self,e):
+        try:
+            soglia = float(self._view.txt_soglia.value)
+        except ValueError:
+            self._view.show_alert("Inserisci un numero valido per la soglia.")
+
+        self._view.lista_visualizzazione_3.controls.clear()
+        path, peso_totale= self._model.get_shortest_path(soglia)
+
+        if not path:
+            self._view.lista_visualizzazione_3.controls.append(
+                ft.Text(f"Nessun cammino trovato con soglia {soglia} e almeno 2 archi.")
+            )
+            self._view.page.update()
+            return
+
+        self._view.lista_visualizzazione_3.controls.append(ft.Text(f"Peso totale: {peso_totale:.2f}"))
+
+        for u,v, peso in path:
+            nodo_u= self._model.rifugi[u]
+            nodo_v= self._model.rifugi[v]
+
+            row= ft.Text(f"[{nodo_u.id}] {nodo_u.nome} -> [{nodo_v.id}] {nodo_v.nome} | peso : {peso:.2f}")
+            self._view.lista_visualizzazione_3.controls.append(row)
+        self._view.page.update()
+
 
